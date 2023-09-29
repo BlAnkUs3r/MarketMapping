@@ -7,14 +7,14 @@ import subprocess
 #custom color
 customtkinter.set_appearance_mode("light")
 customtkinter.set_default_color_theme("dark-blue")
-
+print(os.getcwd()) 
 #Title Name
 root = customtkinter.CTk()
 root.geometry("320x480")
 root.title("Market Mapping")
 
 #path to logo
-root.iconpath = ImageTk.PhotoImage(file=os.path.join("C:\\Users\\samue\\Documents\\map", "shoppingcart.png"))
+root.iconpath = ImageTk.PhotoImage(file=os.path.join(os.getcwd(), "shoppingcart.png"))
 root.wm_iconbitmap()
 root.iconphoto(False, root.iconpath)
 
@@ -25,7 +25,7 @@ def closeWindow():
 #opens map.py
 def openMap():
     # Specify the path to the map.py script here
-    map_script_path = "C:\\Users\\samue\\Documents\\map\\map.py"
+    map_script_path = os.path.join(os.getcwd(), "map.py")
     
     try:
         # Start the map.py script and wait for it to complete
