@@ -26,18 +26,18 @@ def closeWindow():
    root.destroy()
 
 # opens map.py
-def openMap():
+def openMainpage():
     # Specify the path to the map.py script here
-    map_script_path = os.path.join(current_directory, "map.py")
-
-    try:
-        # Start the map.py script and wait for it to complete
-        subprocess.run(["python", map_script_path], check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Error running map.py: {e}")
-
+    main_script_path = os.path.join(current_directory, "mainpage.py")
+    
     # Close the current UI window
     root.destroy()
+    try:
+        # Start the map.py script and wait for it to complete
+        subprocess.run(["python", main_script_path], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running mainpage.py: {e}")
+
 
 # registration process
 def register():
@@ -72,7 +72,7 @@ def login():
                     save_credentials(entered_username, entered_password)
 
                 # Open map.py
-                openMap()
+                openMainpage()
                 return  # Exit the function when a match is found
 
     error_label.config(text="Login Failed: Invalid username or password", fg="red")
