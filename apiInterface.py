@@ -22,7 +22,7 @@ HEADERS = {'Authorization': 'bearer %s' % API_KEY}
 def getStoreInfoNoSearch(location):
     parameters = {'location':location,
               'limit':35,
-              'categories':'markets,convenience,grocery',
+              'categories':'markets,convenience,grocery,electronics',
               'open_now':True,
               'radius': 10000,
               }
@@ -39,7 +39,7 @@ def getStoreInfoWithSearch(location, searchString):
               'location':location,
               'term':searchString,
               'limit':35,
-              'categories':'markets,convenience,grocery',
+              'categories':'markets,convenience,grocery,electronics',
               'open_now':True,
               'radius': 10000,
               }
