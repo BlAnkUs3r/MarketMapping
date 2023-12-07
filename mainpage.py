@@ -23,7 +23,7 @@ class App(customtkinter.CTk):
 
         #Sets The Title of The Page and Allows You To Adjust Object Placement
         self.title("Market Mapping")
-        self.geometry("720x720")
+        self.geometry("{}x{}+0+0".format(self.winfo_screenwidth(), self.winfo_screenheight()))
         self.grid_columnconfigure(0, weight=3)
         self.grid_rowconfigure(1, weight=1)
 
@@ -73,8 +73,10 @@ class App(customtkinter.CTk):
         if self.topWindow is not None:
             self.topWindow.destroy()
 
+        x = (self.winfo_screenwidth() / 2)
+        y = (self.winfo_screenheight() / 2)
         self.topWindow = customtkinter.CTkToplevel(self)
-        self.topWindow.geometry("500x500")
+        self.topWindow.geometry("500x200+{}+{}".format(x,y))
         self.topWindow.grid_columnconfigure(0, weight=1)
         self.topWindow.grid_columnconfigure(1, weight=1)
         label = customtkinter.CTkLabel(self.topWindow, text="Please input your location (Address Prefered)", font=("roboto", 20))
@@ -89,11 +91,14 @@ class App(customtkinter.CTk):
         self.topWindow.after(100, self.topWindow.lift)
 
     def openSearch(self):
+        x = (self.winfo_screenwidth() / 2)
+        y = (self.winfo_screenheight() / 2)
+
         if self.topWindow is not None:
             self.topWindow.destroy()
 
         self.topWindow = customtkinter.CTkToplevel(self)
-        self.topWindow.geometry("500x500")
+        self.topWindow.geometry("500x200+{}+{}".format(x,y))
         self.topWindow.grid_columnconfigure(0, weight=1)
         self.topWindow.grid_columnconfigure(2, weight=1)
         label = customtkinter.CTkLabel(self.topWindow, text="Please Input Store Name or Search Term", font=("roboto", 20))
@@ -143,10 +148,13 @@ class App(customtkinter.CTk):
         self.topWindow = val
 
     def createConfirmationWindow(self, text):
+
+        x = (self.winfo_screenwidth() / 2)
+        y = (self.winfo_screenheight() / 2)
         #This Creates A Window Verifying To The User That An Item Has Been Added
         if self.topWindow is None or not self.topWindow.winfo_exists():    
             self.topWindow = customtkinter.CTkToplevel(self)
-            self.topWindow.geometry("200x200")
+            self.topWindow.geometry("250x150+{}+{}".format(x,y))
             topWindowLabel = customtkinter.CTkLabel(self.topWindow, text=text)
             topWindowLabel.pack(side="top", padx=20, pady=20)
             #Ensures The Top Window Appears At Front of App
@@ -155,7 +163,7 @@ class App(customtkinter.CTk):
             #If There Is Already A Top Window, The Old One Is Destroyed and Replaced With The New
             self.topWindow.destroy()
             self.topWindow = customtkinter.CTkToplevel(self)
-            self.topWindow.geometry("250x200")
+            self.topWindow.geometry("250x150+{}+{}".format(x,y))
             topWindowLabel = customtkinter.CTkLabel(self.topWindow, text=text)
             topWindowLabel.pack(side="top", padx=20, pady=20)
             self.topWindow.after(20, self.topWindow.lift)
@@ -164,6 +172,12 @@ class App(customtkinter.CTk):
     # Specify the path to the map.py script here
         map_script_path = os.path.join(current_directory, "map.py")
         # Close the current UI window
+        #Write Cart Information into Txt
+        with open("mapInfo.txt", "w") as file:
+            file.write(f"Initial Location,  {self.userLocation}\n")
+            for i in shoppingCart:
+                file.write(f"{i[0]},  {i[1]}\n")
+        file.close
         self.destroy()
         try:
             # Start the map.py script and wait for it to complete
@@ -196,7 +210,9 @@ class App(customtkinter.CTk):
 class itemList(customtkinter.CTkToplevel):
     def __init__(self, master):
         super().__init__(master)
-        self.geometry("400x400")
+        x = (self.winfo_screenwidth() / 2)
+        y = (self.winfo_screenheight() / 2)
+        self.geometry("400x400+{}+{}".format(x,y))
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
         self.after(20, self.lift)
@@ -269,7 +285,6 @@ class StoreItemFrame(customtkinter.CTkScrollableFrame):
 
             newButton = storeCartButton(frame, (value[0], value[1]))
             newButton.grid(row=1, column=1, padx=10, pady=(10, 0), sticky="e")
-
             storeText = customtkinter.CTkLabel(frame, text=value[0] + " (" + value[1] + ")", fg_color="transparent", font=("roboto", 18))
             storeText.grid(row=1, column=0, padx=10, pady=(10, 0), sticky="w")
 
@@ -329,7 +344,7 @@ def setItemsNoSearch(location):
 
         for store in info['businesses']:
             if store['image_url'] != '' and store['location']['address1'][0].isdigit():
-                information = (store['name'], store['location']['address1'], store['image_url'])
+                information = (store['name'], store['location']['address1'] + ", " + store['location']['zip_code'], store['image_url'])
                 itemList.append(information)
 
         return itemList
@@ -345,7 +360,7 @@ def setItemsWithSearch(location, search):
 
         for store in info['businesses']:
             if store['image_url'] != '' and store['location']['address1'][0].isdigit():
-                information = (store['name'], store['location']['address1'], store['image_url'])
+                information = (store['name'], store['location']['address1'] + ", " + store['location']['zip_code'], store['image_url'])
                 itemList.append(information)
 
         return itemList

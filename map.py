@@ -1,56 +1,46 @@
-import tkinter as tk
-from tkintermapview import TkinterMapView
+import customtkinter
+import os
+import subprocess
+import mapInterface as mp
 
-def draw_route():
-    start_address = entry_start.get()
-    end_address = entry_end.get()
+sampleTuple = []
+class routeViewButton(customtkinter.CTkButton):
+    def __init__(self, master, start, end):
+        print("Im here!")
+        super().__init__(master, text="ViewRoute", command= lambda: self.showRoute(start,end))
 
-    # Clear existing markers by removing all items on the Canvas widget
-    canvas.delete("marker")
-    canvas.delete("line")  # Clear existing lines
+    def showRoute(self, first, last):
+        mp.drawAndShow(first,last)
 
-    # Set the markers and labels for start and end points
-    map_widget.set_address(start_address, marker=True)
-    map_widget.set_address(end_address, marker=True)
+with open("mapInfo.txt", "r") as file:
+      for line in file:
+            tup = line.strip().split(",  ")
+            sampleTuple.append(tuple(tup))
 
-    # Add labels for start and end points using the Canvas widget
-    x_start, y_start = map_widget.get_position_from_address(start_address)
-    x_end, y_end = map_widget.get_position_from_address(end_address)
+root = customtkinter.CTk()
+root.title("Market Mapping Map View")
+root.geometry("{}x{}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 
-    canvas.create_text(x_start, y_start - 10, text="Start", fill="red", font=("Arial", 12))
-    canvas.create_text(x_end, y_end - 10, text="End", fill="blue", font=("Arial", 12))
+root.grid_columnconfigure(0, weight=3)
+root.grid_rowconfigure(0, weight=1)
 
-    # Draw a line between start and end points
-    canvas.create_line(x_start, y_start, x_end, y_end, fill="green", width=2, tags="line")
+scrollableButtons = customtkinter.CTkScrollableFrame(root, label_text="Route List")
+scrollableButtons.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew")
 
-root_tk = tk.Tk()
-root_tk.geometry("800x600")
-root_tk.title("Route Drawing")
+for i, value in enumerate(sampleTuple):
+            if (i + 1) != len(sampleTuple):
+                frame = customtkinter.CTkFrame(scrollableButtons)
+                frame.grid(row=i, column=0, padx=10, pady=(10, 0), sticky="nsew")
+                frame.grid_columnconfigure(0, weight=1)
 
-# Map
-map_widget = TkinterMapView(root_tk, width=600, height=400, corner_radius=0)
-map_widget.pack(fill="both", expand=True)
+                newButton = routeViewButton(frame, sampleTuple[i][1], sampleTuple[i+1][1])
+                print(sampleTuple[i][1] + " " + sampleTuple[i+1][1])
+                newButton.grid(row=1, column=1, padx=10, pady=(10, 0), sticky="e")
 
-# Google URL
-map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&h1=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+                ButtonText = customtkinter.CTkLabel(frame, text="Route From " + sampleTuple[i][0] + " (" + sampleTuple[i][1] + ")" " to " + sampleTuple[i+1][0] + " (" + sampleTuple[i+1][1] + ")" , fg_color="transparent", font=("roboto", 18))
+                ButtonText.grid(row=1, column=0, padx=10, pady=(10, 0), sticky="w")
+ 
 
-# Entry for specifying starting and ending addresses
-label_start = tk.Label(root_tk, text="Start Address:")
-label_start.pack()
-entry_start = tk.Entry(root_tk)
-entry_start.pack()
+        
 
-label_end = tk.Label(root_tk, text="End Address:")
-label_end.pack()
-entry_end = tk.Entry(root_tk)
-entry_end.pack()
-
-# Button to draw the route
-draw_button = tk.Button(root_tk, text="Draw Route", command=draw_route)
-draw_button.pack()
-
-# Create a Canvas widget to add labels, markers, and lines
-canvas = tk.Canvas(root_tk)
-canvas.pack()
-
-root_tk.mainloop()
+root.mainloop() 
