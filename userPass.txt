@@ -15,3 +15,4 @@ Username:                                    Chad, Password:             190
 Username:                                    Chad, Password:             190
 Username: chad, Password: 123eee
 Username: chad, Password: 123eee
+Username: Chad, Password: 123eee

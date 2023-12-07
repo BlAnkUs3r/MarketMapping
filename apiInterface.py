@@ -39,7 +39,7 @@ def getStoreInfoWithSearch(location, searchString):
               'location':location,
               'term':searchString,
               'limit':35,
-              'categories':'markets,convenience,grocery,electronics',
+              'categories':'markets,convenience,grocery,electronics,restuarants,fashion,computers,',
               'open_now':True,
               'radius': 10000,
               }
