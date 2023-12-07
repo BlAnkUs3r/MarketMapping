@@ -70,12 +70,18 @@ def login():
                 # Check if "Remember Me" is checked
                 if remember_me.get() == 1:
                     save_credentials(entered_username, entered_password)
+                if remember_me.get() == 0:
+                    del_credentials()
 
                 # Open map.py
                 openMainpage()
                 return  # Exit the function when a match is found
 
     error_label.config(text="Login Failed: Invalid username or password", fg="red")
+
+# Deletes the credentials in the txt file
+def del_credentials():
+    open("remembered_credentials.txt", "w").close()
 
 # Function to save credentials to a file
 def save_credentials(username, password):
